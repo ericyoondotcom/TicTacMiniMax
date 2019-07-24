@@ -38,23 +38,17 @@ class MMNode:
             elif winner == 1:
                 self.value = 50
             return []
-        
+        #switched, because it's self.maximizer, not child.maximizer
         if self.maximizer:
-            best = -9999
-            for child in children:
-                '''
-                if self.state == [[-1, -1, 1], [0, 1, 0], [-1, -1, 1]]:
-                    printBoard(child.state)
-                    print("Child value: ", child.value, "Best so far: ", best)
-                    input("Press to continue")
-                '''
-                if child.value > best or (child.value == best and randrange(2) == 0):
-                    self.favoriteChild = child
-                    best = child.value
-        else:
             best = 9999
             for child in children:
                 if child.value < best or (child.value == best and randrange(2) == 0):
+                    self.favoriteChild = child
+                    best = child.value
+        else:
+            best = -9999
+            for child in children:
+                if child.value > best or (child.value == best and randrange(2) == 0):
                     self.favoriteChild = child
                     best = child.value
         self.value = best
@@ -106,6 +100,7 @@ def findWinnerHelper(state, player, log=False):
 
 def userMove(gameState):
     inp = input("Your turn!\nUse QWE/ASD/ZXC for input. >")
+    
     if inp == "q" or inp == "a" or inp == "z":
         col = 0
     elif inp == "w" or inp == "s" or inp == "x":
@@ -118,6 +113,7 @@ def userMove(gameState):
         row = 1
     elif inp == "z" or inp == "x" or inp == "c":
         row = 2
+
     if gameState.state[row][col] != 0:
         while True:
             print(gameState.state[row][col])
@@ -183,6 +179,7 @@ while True:
             printBoard(gameState.state)
             print(findWinner(gameState.state))
             print(gameState.value)
+            print("# of children: ", len(gameState.children))
             if winner == 42:
                 print("Tie! Nobody wins. (Don't feel bad, this is the best outcome you can get)")
             elif winner == -1:
