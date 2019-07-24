@@ -28,15 +28,14 @@ class MMNode:
                         printBoard(newState)
                     children.append(MMNode(newState, not self.maximizer, (row, col)))
         
-        if(len(children) == 0):
-            self.value = findWinner(self.state)
-            if self.value == 0:
-                self.value = -1
-            elif self.value == 42:
+        winner = findWinner(self.state)
+        if(winner != 0):
+            
+            if winner == 42:
                 self.value = 0
-            elif self.value == -1:
+            elif winner == -1:
                 self.value = -50
-            elif self.value == 1:
+            elif winner == 1:
                 self.value = 50
             return []
         
