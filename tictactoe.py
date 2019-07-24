@@ -16,13 +16,18 @@ class MMNode:
         self.move = move
         self.children = self.generateChildren(move == None)
 
-    def generateChildren(self):
+    def generateChildren(self, log=False):
         children = []
         for row in range(len(self.state)):
             for col in range(len(self.state[row])):
                 if self.state[row][col] == 0:
                     newState = copy.deepcopy(self.state)
                     newState[row][col] = -1 if self.maximizer else 1
+                    if log:
+                        system("clear")
+                        print("Generating Minimax tree, please wait...")
+                        printBoard(newState)
+                        print("(I've done this in C# before and it's WAY faster, just sayin'!)")
                     children.append(MMNode(newState, not self.maximizer, (row, col)))
         
         winner = findWinner(self.state)
