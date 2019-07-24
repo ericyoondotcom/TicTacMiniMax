@@ -16,16 +16,13 @@ class MMNode:
         self.move = move
         self.children = self.generateChildren(move == None)
 
-    def generateChildren(self, log=False):
+    def generateChildren(self):
         children = []
         for row in range(len(self.state)):
             for col in range(len(self.state[row])):
                 if self.state[row][col] == 0:
                     newState = copy.deepcopy(self.state)
                     newState[row][col] = -1 if self.maximizer else 1
-                    if log:
-                        system("clear")
-                        printBoard(newState)
                     children.append(MMNode(newState, not self.maximizer, (row, col)))
         
         winner = findWinner(self.state)
@@ -55,10 +52,10 @@ class MMNode:
         return children
 
 # I literally only have this bc I don't want to rewrite each condition :/
-def findWinner(state, log=False):
-    if findWinnerHelper(state, -1, log):
+def findWinner(state):
+    if findWinnerHelper(state, -1):
         return -1
-    if findWinnerHelper(state, 1, log):
+    if findWinnerHelper(state, 1):
         return 1
 
     for row in state:
@@ -67,14 +64,10 @@ def findWinner(state, log=False):
                 return 0
     return 42 #42 is Tie case
 
-def findWinnerHelper(state, player, log=False):
+def findWinnerHelper(state, player):
     if state[0][0] == player and state[1][1] == player and state[2][2] == player:
-        if log:
-            print("Found down-rightwards diagonal match")
         return True
     if state[2][0] == player and state[1][1] == player and state[0][2] == player:
-        if log:
-            print("Found down-leftwards diagonal match")
         return True
     for i in range(len(state)):
         found = True
@@ -83,8 +76,6 @@ def findWinnerHelper(state, player, log=False):
                 found = False
                 break
         if found:
-            if log:
-                print("Found match in row ", i)
             return True
     for i in range(len(state)):
         found = True
@@ -93,8 +84,6 @@ def findWinnerHelper(state, player, log=False):
                 found = False
                 break
         if found:
-            if log:
-                print("Found match in col ", i)
             return True
     
 
@@ -156,16 +145,9 @@ while True:
     while True:
         #system('clear')
         printBoard(gameState.state)
-        print("Score: ", gameState.value)
+        print("Minimax score: ", gameState.value)
 
         if gameState.maximizer:
-                print("I AM MAXIMIZER")
-        for c in gameState.children:
-            printBoard(c.state)
-            print(c.value)
-        print("best: ", gameState.favoriteChild.value)
-        #if gameState.maximizer:
-        if input("Type r for computery help!") != "r":
             suggested = gameState.favoriteChild.move
             print("Suggested move: (", suggested[0] + 1, ", ", suggested[1] + 1, ")", sep="")
             gameState = userMove(gameState)
@@ -177,9 +159,6 @@ while True:
 
         if winner != 0:
             printBoard(gameState.state)
-            print(findWinner(gameState.state))
-            print(gameState.value)
-            print("# of children: ", len(gameState.children))
             if winner == 42:
                 print("Tie! Nobody wins. (Don't feel bad, this is the best outcome you can get)")
             elif winner == -1:
