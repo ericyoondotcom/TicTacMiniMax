@@ -127,8 +127,11 @@ def computerMove(gameState):
     return gameState.favoriteChild
 
 def printBoard(state):
+    print("   1 2 3")
+    print("  --------")
+    j = 0
     for row in state:
-        print("|", end="")
+        print(j + 1, "|", end="")
         for i in row:
             if i == -1:
                 char = "X"
@@ -138,7 +141,8 @@ def printBoard(state):
                 char = " "
             print(char, end=" ")
         print("|")
-    print("")
+        j += 1
+    print("  --------")
 
 print("Welcome to Tic Tac Toe, where you never win!®")
 print("Do you want to go first?")
@@ -148,7 +152,7 @@ gameState = root
 
 while True:
     while True:
-        #system('clear')
+        system('clear')
         printBoard(gameState.state)
         print("Minimax score: ", gameState.value)
 
